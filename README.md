@@ -2,11 +2,16 @@
 
 集中查看 **洛谷 / AtCoder / Codeforces** 三个平台比赛列表的本地看板。
 
+> **不想装环境？** 直接下载打包好的发行版：
+> **[Releases · v1.0.0](https://github.com/yueliangeruanshi/contest-hub/releases/latest)**
+> → `contest-hub-v1.0.0.zip` / `.tar.gz`
+
 ## 启动
 
 ```bash
 cd contest-hub
-python server.py            # 或双击 start.command
+pip install fastapi uvicorn requests beautifulsoup4
+python server.py            # macOS / Linux 也可双击 start.command
 ```
 
 然后打开 http://127.0.0.1:8777
@@ -39,21 +44,48 @@ python server.py            # 或双击 start.command
 
 > 为什么 AtCoder 不能只用 kenkoooo？实测该 JSON 只收录到 `awc0020`，**不含 AtCoder Weekday Contest（AWC）等新赛事，也不含任何未来场次**（如 ABC481 / ARC233 / AGC079 都查不到）。官方列表页才有完整 upcoming，故改为官方为主、kenkoooo 补历史。
 
+## 静态演示版（不需要 Python 后端）
+
+`docs/` 下是一份纯静态演示，读取预先导出的数据快照，可用 GitHub Pages 直接托管。
+
+```bash
+python export_snapshot.py        # 重新抓取并生成 docs/data/contests.json
+```
+
+启用 Pages：**Settings → Pages → Build and deployment → Deploy from a branch** → 选 `main` 分支 + `/docs` 目录。
+倒计时在页面上仍是实时计算的，但比赛数据本身是快照（可用定时任务或 Actions 重新生成）。
+
 ## 文件结构
 
 ```
 contest-hub/
-├── server.py            # FastAPI：抓取 + 解析 + 聚合 + 5 分钟内存缓存 + 静态托管
+├── server.py            # FastAPI：5 分钟内存缓存 + CORS + 静态托管
+├── fetchers.py          # 三平台抓取逻辑（仅依赖 requests + beautifulsoup4）
+├── export_snapshot.py   # 导出 docs/data/contests.json 静态快照
 ├── start.command        # 双击启动（自动开浏览器）
 ├── static/
 │   ├── index.html       # 页面骨架
 │   ├── style.css        # 苹果风深色毛玻璃样式
 │   └── app.js           # 渲染、筛选、倒计时
+├── docs/                # GitHub Pages 静态演示（index.html + data/contests.json）
 └── README.md
 ```
 
-## 可调参数（server.py）
+## 可调参数
 
-- `CACHE_TTL = 300`：缓存秒数；前端每 5 分钟自动拉取一次，点"刷新"强制更新
-- `fetch_luogu(pages=2)`：洛谷抓取页数
-- 各平台"已结束"保留窗口：`cutoff = now - 60 天`
+- `server.py` → `CACHE_TTL = 300`：缓存秒数；前端每 5 分钟自动拉取一次，点"刷新"强制更新
+- `fetchers.py` → `fetch_luogu(pages=2)`：洛谷抓取页数
+- `fetchers.py` → 各平台"已结束"保留窗口：`cutoff = now - 60 天`
+
+## 发布 Release
+
+```bash
+python export_snapshot.py
+VERSION=v1.0.0
+git archive --format=zip   --prefix="contest-hub-$VERSION/" -o "contest-hub-$VERSION.zip"   HEAD
+git archive --format=tar.gz --prefix="contest-hub-$VERSION/" -o "contest-hub-$VERSION.tar.gz" HEAD
+gh release create $VERSION contest-hub-$VERSION.zip contest-hub-$VERSION.tar.gz \
+  --title "Contest Hub $VERSION" --notes-file notes.md
+```
+
+> 用 `git archive` 打包只会收录已跟踪文件，不会把 `.git/`、`__pycache__/`、macOS 的 `._*` 元数据混进去。
