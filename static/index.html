@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Contest Hub · 洛谷 / AtCoder / Codeforces 比赛一览</title>
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<div class="app">
+  <header class="hd">
+    <div class="brand">
+      <div class="logo">
+        <span class="dot cf"></span><span class="dot ac"></span><span class="dot lg"></span>
+      </div>
+      <div class="title-wrap">
+        <h1>Contest Hub</h1>
+        <p class="sub">洛谷 · AtCoder · Codeforces 比赛集中看板</p>
+      </div>
+    </div>
+    <div class="hd-right">
+      <div class="updated">更新于 <span id="updated">—</span></div>
+      <button id="refresh" class="btn-refresh" title="强制刷新">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>
+        </svg>
+        <span>刷新</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="stats" id="stats"></section>
+
+  <section class="filters">
+    <div class="chips" id="platformChips"></div>
+    <div class="right-tools">
+      <div class="search">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+        </svg>
+        <input id="search" type="text" placeholder="搜索比赛名称 / 编号…" autocomplete="off">
+      </div>
+      <div class="tabs" id="statusTabs"></div>
+    </div>
+  </section>
+
+  <main id="list" class="list"></main>
+
+  <footer class="ft">
+    <span id="srcStatus"></span>
+    <span class="tip">数据来自各平台公开接口，缓存 5 分钟 · 点击卡片跳转原站</span>
+  </footer>
+</div>
+
+<script src="static/app.js"></script>
+</body>
+</html>
