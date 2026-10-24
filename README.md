@@ -6,7 +6,7 @@
 >
 > **不想装环境？** 直接下载打包好的发行版：
 > **[Releases · v1.2.0](https://github.com/yueliangeruanshi/contest-hub/releases/latest)**
-> → `contest-hub-v1.0.0.zip` / `.tar.gz`
+> → `contest-hub-v1.2.0.zip` / `.tar.gz`
 
 ## 启动
 
