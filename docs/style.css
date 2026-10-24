@@ -62,6 +62,17 @@ h1{font-size:26px;font-weight:650;letter-spacing:-.4px}
 .btn-refresh.spin svg{animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* 语言切换（中 / EN） */
+.btn-lang{
+  display:flex;align-items:center;gap:6px;cursor:pointer;
+  background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--tx);
+  padding:8px 12px;border-radius:12px;font-size:13px;font-family:inherit;
+  backdrop-filter:blur(20px);transition:all .35s var(--ease);
+}
+.btn-lang span{min-width:22px;text-align:center;font-weight:600;letter-spacing:.2px}
+.btn-lang:hover{background:rgba(255,255,255,.15);transform:translateY(-1px)}
+.btn-lang:active{transform:scale(.96)}
+
 /* demo-only */
 .demo-tag{
   display:inline-block;vertical-align:middle;margin-left:8px;padding:2px 9px;border-radius:8px;

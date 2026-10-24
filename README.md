@@ -36,6 +36,17 @@ python server.py            # macOS / Linux 也可双击 start.command
 | 关键词搜索 | 匹配比赛名、编号、赛事类型 |
 | 跳转原站 | 点击卡片直达对应比赛页面 |
 | 数据源自检 | 页脚显示每个平台抓取成功与否及条数 |
+| 中英双语 | 右上角一键切换中文 / English，选择写入 localStorage |
+
+## 语言
+
+页面右上角有中 / EN 切换按钮，本地版与 Pages 演示版都支持。
+
+- 词典集中在 `static/i18n.js`（`docs/` 下有一份同样的副本）：`zh` / `en` 两套键值，`t(key)` 取词，`plural(n)` 处理英文单复数
+- HTML 里用 `data-i18n` / `data-i18n-html` / `data-i18n-ph` / `data-i18n-title` 标注静态文案，切换时整体刷新
+- 首次访问按浏览器语言自动判断（`navigator.language` 以 `en` 开头则默认英文），之后记住上次选择
+- 平台名里的 Codeforces / AtCoder 两种语言相同，洛谷 → Luogu、代码源 → Daimayuan 会翻译；时长与倒计时在英文下显示为 `2h 30m` / `3d 12:34:56`
+- 比赛标题本身来自各平台原文，不做翻译
 
 ## 数据源
 
@@ -87,8 +98,9 @@ contest-hub/
 ├── static/
 │   ├── index.html       # 页面骨架
 │   ├── style.css        # 苹果风深色毛玻璃样式
+│   ├── i18n.js          # 中英词典 + 语言切换（docs 下有一份同样的副本）
 │   └── app.js           # 渲染、筛选、倒计时
-├── docs/                # GitHub Pages 静态演示（index.html + data/contests.json）
+├── docs/                # GitHub Pages 静态演示（index.html + i18n.js + data/contests.json）
 ├── .github/workflows/   # release.yml、update-snapshot.yml
 ├── README.md            # 简体中文
 ├── README_EN.md         # English

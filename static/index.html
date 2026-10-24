@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Contest Hub · Codeforces / AtCoder / 洛谷 / 代码源 比赛一览</title>
+<title data-i18n="doc.title">Contest Hub · Codeforces / AtCoder / 洛谷 / 代码源 比赛一览</title>
 <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
@@ -17,16 +17,22 @@
       </div>
       <div class="title-wrap">
         <h1>Contest Hub</h1>
-        <p class="sub">Codeforces · AtCoder · 洛谷 · 代码源 比赛集中看板</p>
+        <p class="sub" data-i18n="brand.sub">Codeforces · AtCoder · 洛谷 · 代码源 比赛集中看板</p>
       </div>
     </div>
     <div class="hd-right">
-      <div class="updated">更新于 <span id="updated">—</span></div>
-      <button id="refresh" class="btn-refresh" title="强制刷新">
+      <div class="updated"><span data-i18n="updated">更新于</span> <span id="updated">—</span></div>
+      <button id="lang" class="btn-lang" data-i18n-title="lang.t" title="切换为英文">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>
+        </svg>
+        <span data-i18n="lang.switch">EN</span>
+      </button>
+      <button id="refresh" class="btn-refresh" data-i18n-title="refresh.t" title="强制刷新">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/>
         </svg>
-        <span>刷新</span>
+        <span data-i18n="refresh">刷新</span>
       </button>
     </div>
   </header>
@@ -40,7 +46,7 @@
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
         </svg>
-        <input id="search" type="text" placeholder="搜索比赛名称 / 编号…" autocomplete="off">
+        <input id="search" type="text" data-i18n-ph="search.ph" placeholder="搜索比赛名称 / 编号…" autocomplete="off">
       </div>
       <div class="tabs" id="statusTabs"></div>
     </div>
@@ -50,10 +56,11 @@
 
   <footer class="ft">
     <span id="srcStatus"></span>
-    <span class="tip">数据来自各平台公开接口，缓存 5 分钟 · 点击卡片跳转原站</span>
+    <span class="tip" data-i18n="foot.tip">数据来自各平台公开接口，缓存 5 分钟 · 点击卡片跳转原站</span>
   </footer>
 </div>
 
+<script src="static/i18n.js"></script>
 <script src="static/app.js"></script>
 </body>
 </html>

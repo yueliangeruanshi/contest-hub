@@ -36,6 +36,17 @@ Then open <http://127.0.0.1:8777>.
 | Keyword search | Matches contest name, ID and contest type |
 | Jump to source | Click a card to open the original contest page |
 | Source self-check | The footer shows fetch status and contest count per platform |
+| Bilingual UI | One-click 中文 / English switch in the top-right corner, persisted in localStorage |
+
+## Language
+
+A 中 / EN toggle sits in the top-right corner, in both the local app and the Pages demo.
+
+- The dictionary lives in `static/i18n.js` (with an identical copy under `docs/`): two `zh` / `en` key sets, `t(key)` to look strings up and `plural(n)` for English singular/plural
+- Static markup in the HTML is tagged with `data-i18n` / `data-i18n-html` / `data-i18n-ph` / `data-i18n-title` and re-rendered on switch
+- On a first visit the browser language decides (`navigator.language` starting with `en` → English); the choice is remembered afterwards
+- Codeforces and AtCoder keep their names in both languages; 洛谷 → Luogu and 代码源 → Daimayuan are translated. Durations and countdowns render as `2h 30m` / `3d 12:34:56` in English
+- Contest titles are kept verbatim from each platform, never machine-translated
 
 ## Data sources
 
@@ -86,8 +97,9 @@ contest-hub/
 ├── static/
 │   ├── index.html       # page skeleton
 │   ├── style.css        # dark frosted-glass Apple-style theme
+│   ├── i18n.js          # zh/en dictionary + language switch (same copy under docs/)
 │   └── app.js           # rendering, filtering, countdown
-├── docs/                # GitHub Pages demo (index.html + data/contests.json)
+├── docs/                # GitHub Pages demo (index.html + i18n.js + data/contests.json)
 ├── .github/workflows/   # release.yml, update-snapshot.yml
 ├── README.md            # 简体中文
 ├── README_EN.md         # English
