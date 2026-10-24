@@ -1,7 +1,9 @@
 # Contest Hub
 
-集中查看 **洛谷 / AtCoder / Codeforces** 三个平台比赛列表的本地看板。
+集中查看 **Codeforces / AtCoder / 洛谷 / 代码源** 四个平台比赛列表的看板。
 
+> **在线 Demo**：<https://yueliangeruanshi.github.io/contest-hub/>（GitHub Pages 静态版，数据为定时快照）
+>
 > **不想装环境？** 直接下载打包好的发行版：
 > **[Releases · v1.0.0](https://github.com/yueliangeruanshi/contest-hub/releases/latest)**
 > → `contest-hub-v1.0.0.zip` / `.tar.gz`
@@ -23,7 +25,7 @@ python server.py            # macOS / Linux 也可双击 start.command
 
 | 功能 | 说明 |
 | --- | --- |
-| 三平台聚合 | 一次拉取 CF / AtCoder / 洛谷，统一时间轴排序 |
+| 四平台聚合 | 一次拉取 CF / AtCoder / 洛谷 / 代码源，统一时间轴排序 |
 | 实时倒计时 | 未开始显示"距离开始"，进行中显示"剩余时间"，每秒刷新 |
 | 状态分组 | 正在进行 → 即将开始 → 已结束 |
 | 平台筛选 | 顶部彩色 chip 可单独开关任一平台 |
@@ -39,8 +41,11 @@ python server.py            # macOS / Linux 也可双击 start.command
 | AtCoder | **主**：`atcoder.jp/contests/` 官方列表页 | 解析 Active / Upcoming / Daily / Recent 四类表格，覆盖 Weekday Contest（AWC）与全部未来场次 |
 | AtCoder | 辅：`kenkoooo.com/atcoder/resources/contests.json` | AtCoder Problems 公开 JSON，补齐官方页未列出的历史场次与 rated 信息；按 id 去重，官方优先 |
 | 洛谷 | `luogu.com.cn/contest/list?page=N` | 服务端渲染页面，正则/BS4 解析；带 UA 与 C3VK 挑战 cookie 绕过 CC 防护，抓前 2 页（约 40 场） |
+| 代码源 | `bs.daimayuan.top/contest` | Hydro 框架的 SPA，普通 UA 只拿得到空骨架；**改用搜索引擎 UA** 后服务端会返回内嵌 `tdocs` 的完整页面，一条请求即可拿到全部比赛的 `beginAt` / `endAt` / `rated` |
 
-洛谷无公开比赛 API（`/api/contest/list` 已 404），因此采用页面解析；若洛谷改版导致解析失败，页脚会标红提示，此时只需修改 `parse_luogu_page()` 中的选择器。
+洛谷无公开比赛 API（`/api/contest/list` 已 404），因此采用页面解析；若洛谷改版导致解析失败，页脚会标红提示，此时只需修改 `fetchers.py` 中 `parse_luogu_page()` 的选择器。
+
+代码源同理，若其 Hydro 版本升级后不再内嵌 `tdocs`，页脚会标红，改 `fetch_daimayuan()` 即可。
 
 > 为什么 AtCoder 不能只用 kenkoooo？实测该 JSON 只收录到 `awc0020`，**不含 AtCoder Weekday Contest（AWC）等新赛事，也不含任何未来场次**（如 ABC481 / ARC233 / AGC079 都查不到）。官方列表页才有完整 upcoming，故改为官方为主、kenkoooo 补历史。
 
@@ -54,6 +59,8 @@ python export_snapshot.py        # 重新抓取并生成 docs/data/contests.json
 
 启用 Pages：**Settings → Pages → Build and deployment → Deploy from a branch** → 选 `main` 分支 + `/docs` 目录。
 倒计时在页面上仍是实时计算的，但比赛数据本身是快照（可用定时任务或 Actions 重新生成）。
+
+本仓库已开启，Demo 地址：<https://yueliangeruanshi.github.io/contest-hub/>
 
 ## 文件结构
 
