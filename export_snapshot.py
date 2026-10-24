@@ -29,13 +29,22 @@ def main() -> int:
         json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
 
     print("已写入 %s" % OUT_FILE)
+    failed = []
     for k, v in payload["sources"].items():
-        flag = "OK " if v["ok"] else "ERR"
-        print("  [%s] %-11s %3d 场 %s" % (flag, k, v["count"], v["error"] or ""))
+        if v["ok"]:
+            print("  [OK ] %-11s %3d 场" % (k, v["count"]))
+        else:
+            failed.append(k)
+            print("  [ERR] %-11s %3d 场 %s" % (k, v["count"], v["error"] or ""))
     print("  合计 %d 场，生成时间 %s" % (payload["count"], payload["generated_at_str"]))
 
-    failed = [k for k, v in payload["sources"].items() if not v["ok"]]
-    return 1 if failed else 0
+    # 单个平台失败（例如洛谷对境外 IP 返回 403）不算失败，全部失败才报错
+    if failed and len(failed) == len(payload["sources"]):
+        print("  所有平台均抓取失败")
+        return 1
+    if failed:
+        print("  部分平台失败：%s（快照仍会保留其余平台）" % "、".join(failed))
+    return 0
 
 
 if __name__ == "__main__":
