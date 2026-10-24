@@ -1,0 +1,45 @@
+name: Update snapshot
+
+# 定时刷新 GitHub Pages 演示页使用的比赛数据快照
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'fetchers.py'
+      - 'export_snapshot.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-snapshot
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 抓取并生成快照
+        run: |
+          pip install -q requests beautifulsoup4
+          python export_snapshot.py
+
+      - name: 有变化则提交
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/data/contests.json
+          if git diff --cached --quiet; then
+            echo "快照无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: 定时更新比赛数据快照"
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
