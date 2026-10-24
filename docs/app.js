@@ -7,7 +7,8 @@
   var PLATFORMS = {
     codeforces: { cn: 'Codeforces', color: 'var(--cf)' },
     atcoder:    { cn: 'AtCoder',    color: 'var(--ac)' },
-    luogu:      { cn: '洛谷',       color: 'var(--lg)' }
+    luogu:      { cn: '洛谷',       color: 'var(--lg)' },
+    daimayuan:  { cn: '代码源',     color: 'var(--dmy)' }
   };
   var TABS = [
     { k: 'all', cn: '全部' },

@@ -9,6 +9,7 @@
   --cf:#3b9dff;
   --ac:#ff8f4d;
   --lg:#4ade80;
+  --dmy:#b48cff;
   --up:#3b9dff;
   --run:#ffd60a;
   --fin:rgba(255,255,255,.30);
@@ -45,6 +46,7 @@ body{
 .dot.cf{background:var(--cf);box-shadow:0 0 10px var(--cf)}
 .dot.ac{background:var(--ac);box-shadow:0 0 10px var(--ac)}
 .dot.lg{background:var(--lg);box-shadow:0 0 10px var(--lg)}
+.dot.dmy{background:var(--dmy);box-shadow:0 0 10px var(--dmy)}
 h1{font-size:26px;font-weight:650;letter-spacing:-.4px}
 .sub{color:var(--tx3);font-size:13px;margin-top:2px}
 .hd-right{display:flex;align-items:center;gap:12px}
@@ -108,6 +110,7 @@ h1{font-size:26px;font-weight:650;letter-spacing:-.4px}
 .chip[data-p="codeforces"].on{color:var(--cf)} .chip[data-p="codeforces"] .sw{background:var(--cf)}
 .chip[data-p="atcoder"].on{color:var(--ac)} .chip[data-p="atcoder"] .sw{background:var(--ac)}
 .chip[data-p="luogu"].on{color:var(--lg)} .chip[data-p="luogu"] .sw{background:var(--lg)}
+.chip[data-p="daimayuan"].on{color:var(--dmy)} .chip[data-p="daimayuan"] .sw{background:var(--dmy)}
 .right-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .search{
   display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);

@@ -7,12 +7,10 @@ Contest Hub - 数据抓取层（server.py 与 export_snapshot.py 共用）
   - AtCoder    : https://atcoder.jp/contests/ (官方列表页, 主)
                  https://kenkoooo.com/atcoder/resources/contests.json (历史补充)
   - 洛谷        : https://www.luogu.com.cn/contest/list (SSR 页面解析)
+  - 代码源      : https://bs.daimayuan.top/contest (Hydro SPA, 需搜索引擎 UA 才内嵌数据)
 只依赖 requests + beautifulsoup4，便于在 GitHub Actions 中运行。
 """
-import re
-import time
-import html as html_lib
-from datetime import datetime, timezone, timedelta
+import json
 import re
 import time
 import html as html_lib
@@ -360,12 +358,89 @@ def fetch_luogu(pages: int = 2) -> tuple[list[dict], str | None]:
     return all_items, None
 
 
+# ---------------------------------------------------------------- 代码源（Hydro）
+
+# 站点是 Hydro SPA，普通 UA 只拿得到空骨架；对搜索引擎 UA 会返回内嵌 tdocs 的完整页面
+DMY_UA = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+
+
+def dmy_parse_time(text: str) -> int:
+    """'2026-10-30T12:00:00.000Z' (UTC) -> unix 秒"""
+    if not text:
+        return 0
+    try:
+        dt = datetime.strptime(text, "%Y-%m-%dT%H:%M:%S.%f%z")
+    except ValueError:
+        try:
+            dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        except Exception:
+            return 0
+    return int(dt.timestamp())
+
+
+def dmy_kind(title: str) -> str:
+    for kw, label in [
+        ("挑战赛", "挑战赛"), ("月赛", "月赛"), ("入门赛", "入门赛"),
+        ("公开赛", "公开赛"), ("练习", "练习赛"), ("NOIP", "NOIP"),
+        ("CSP", "CSP"), ("邀请赛", "邀请赛"),
+    ]:
+        if kw in title:
+            return label
+    return "比赛"
+
+
+def fetch_daimayuan() -> tuple[list[dict], str | None]:
+    """代码源竞赛平台 bs.daimayuan.top 的比赛列表。"""
+    url = "https://bs.daimayuan.top/contest"
+    r = requests.get(url, timeout=25, headers={"User-Agent": DMY_UA})
+    r.raise_for_status()
+
+    text = r.text
+    key = '"tdocs":'
+    i = text.find(key)
+    if i < 0:
+        raise RuntimeError("未找到内嵌比赛数据（页面结构可能已变）")
+    try:
+        arr, _ = json.JSONDecoder().raw_decode(text[i + len(key):])
+    except Exception as e:
+        raise RuntimeError("解析内嵌 JSON 失败：%s" % e)
+
+    out = []
+    cutoff = now_ts() - 60 * 24 * 3600
+    for c in arr:
+        start = dmy_parse_time(c.get("beginAt") or "")
+        end = dmy_parse_time(c.get("endAt") or "")
+        if not start or not end or end <= start:
+            continue
+        if end < cutoff:
+            continue
+        cid = str(c.get("_id") or c.get("docId") or "")
+        title = c.get("title") or "代码源比赛"
+        out.append({
+            "platform": "daimayuan",
+            "platform_cn": "代码源",
+            "id": cid,
+            "name": title,
+            "url": "https://bs.daimayuan.top/contest/%s" % cid,
+            "start": start,
+            "end": end,
+            "duration": end - start,
+            "type": dmy_kind(title),
+            "rated": bool(c.get("rated")),
+            "status": status_of(start, end),
+        })
+    if not out:
+        raise RuntimeError("代码源比赛解析为空")
+    return out, None
+
+
 # ---------------------------------------------------------------- 聚合
 
 FETCHERS = {
     "codeforces": fetch_codeforces,
     "atcoder": fetch_atcoder,
     "luogu": fetch_luogu,
+    "daimayuan": fetch_daimayuan,
 }
 
 
@@ -386,10 +461,3 @@ def build_payload() -> dict:
         "count": len(contests),
         "contests": contests,
     }
-
-
-    payload = build_payload()
-    return payload
-
-
-# ---------------------------------------------------------------- API
