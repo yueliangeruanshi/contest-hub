@@ -1,14 +1,16 @@
 # Contest Hub
 
+[English](README_EN.md) | [简体中文](README.md)
+
 集中查看 **Codeforces / AtCoder / 洛谷 / 代码源** 四个平台比赛列表的看板。
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 
-> **在线 Demo**：<https://yueliangeruanshi.github.io/contest-hub/>（GitHub Pages 静态版，数据为定时快照）
+> **在线 Demo**：<https://yueliangeruanshi.github.io/contest-hub/>（GitHub Pages 静态版，数据为定时刷新）
 >
 > **不想装环境？** 直接下载打包好的发行版：
-> **[Releases · v1.0.0](https://github.com/yueliangeruanshi/contest-hub/releases/latest)**
-> → `contest-hub-v1.0.0.zip` / `.tar.gz`
+> **[Latest Release](https://github.com/yueliangeruanshi/contest-hub/releases/latest)**
+> → `contest-hub-vX.Y.Z.zip` / `.tar.gz`
 
 ## 启动
 
@@ -79,7 +81,7 @@ python export_snapshot.py        # 重新抓取并生成 docs/data/contests.json
 ```
 contest-hub/
 ├── server.py            # FastAPI：5 分钟内存缓存 + CORS + 静态托管
-├── fetchers.py          # 三平台抓取逻辑（仅依赖 requests + beautifulsoup4）
+├── fetchers.py          # 四平台抓取逻辑（仅依赖 requests + beautifulsoup4）
 ├── export_snapshot.py   # 导出 docs/data/contests.json 静态快照
 ├── start.command        # 双击启动（自动开浏览器）
 ├── static/
@@ -87,7 +89,10 @@ contest-hub/
 │   ├── style.css        # 苹果风深色毛玻璃样式
 │   └── app.js           # 渲染、筛选、倒计时
 ├── docs/                # GitHub Pages 静态演示（index.html + data/contests.json）
-└── README.md
+├── .github/workflows/   # release.yml、update-snapshot.yml
+├── README.md            # 简体中文
+├── README_EN.md         # English
+└── LICENSE
 ```
 
 ## 可调参数
