@@ -20,9 +20,30 @@ CST = timezone(timedelta(hours=8))
 
 
 def main() -> int:
-    payload = fetchers.build_payload()
+    # 境外 CI 访问洛谷会被 403，可用 CONTEST_SKIP=luogu 跳过，
+    # 此时沿用上一份快照里该平台的数据，避免把已有的洛谷比赛覆盖成 0 场
+    skip = {s.strip() for s in os.environ.get("CONTEST_SKIP", "").split(",") if s.strip()}
+
+    payload = fetchers.build_payload(skip=skip)
     payload["generated_at_str"] = datetime.now(CST).strftime("%Y-%m-%d %H:%M:%S (UTC+8)")
     payload["snapshot"] = True
+
+    if skip and os.path.exists(OUT_FILE):
+        try:
+            with open(OUT_FILE, encoding="utf-8") as f:
+                old = json.load(f)
+        except Exception:
+            old = {}
+        kept = [c for c in old.get("contests", []) if c.get("platform") in skip]
+        for k, v in old.get("sources", {}).items():
+            if k in skip:
+                payload["sources"][k] = v
+                payload["sources"][k]["kept_from_previous"] = True
+        if kept:
+            payload["contests"].extend(kept)
+            payload["contests"].sort(key=lambda c: (c["start"], c["platform"]))
+            payload["count"] = len(payload["contests"])
+            print("  沿用上一份快照的 %s 数据：%d 场" % ("、".join(skip), len(kept)))
 
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(OUT_FILE, "w", encoding="utf-8") as f:
