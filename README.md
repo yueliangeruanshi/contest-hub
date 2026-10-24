@@ -2,11 +2,13 @@
 
 集中查看 **Codeforces / AtCoder / 洛谷 / 代码源** 四个平台比赛列表的看板。
 
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+
 > **在线 Demo**：<https://yueliangeruanshi.github.io/contest-hub/>（GitHub Pages 静态版，数据为定时快照）
 >
 > **不想装环境？** 直接下载打包好的发行版：
-> **[Releases · v1.2.0](https://github.com/yueliangeruanshi/contest-hub/releases/latest)**
-> → `contest-hub-v1.2.0.zip` / `.tar.gz`
+> **[Releases · v1.0.0](https://github.com/yueliangeruanshi/contest-hub/releases/latest)**
+> → `contest-hub-v1.0.0.zip` / `.tar.gz`
 
 ## 启动
 
@@ -106,3 +108,8 @@ gh release create $VERSION contest-hub-$VERSION.zip contest-hub-$VERSION.tar.gz 
 ```
 
 > 用 `git archive` 打包只会收录已跟踪文件，不会把 `.git/`、`__pycache__/`、macOS 的 `._*` 元数据混进去。
+> 现在打 tag 就会由 Actions 自动完成这一步，无需手动执行。
+
+## 许可证
+
+[MIT](LICENSE) —— 可自由使用、修改、分发，保留版权声明即可。
