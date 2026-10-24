@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 生成最新比赛数据快照
+        # 洛谷偶发风控，抓取失败不应阻断打包
+        continue-on-error: true
+        run: |
+          pip install -q requests beautifulsoup4
+          python export_snapshot.py
+
+      - name: 读取版本号并打包
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          if [ "$TAG" = "$GITHUB_REF" ]; then
+            VERSION="dev"
+          else
+            VERSION="$TAG"
+          fi
+          echo "打包版本: $VERSION"
+          mkdir -p dist
+          git archive --format=zip   --prefix="contest-hub-$VERSION/" \
+            --output="dist/contest-hub-$VERSION.zip"   HEAD
+          git archive --format=tar.gz --prefix="contest-hub-$VERSION/" \
+            --output="dist/contest-hub-$VERSION.tar.gz" HEAD
+          ls -lh dist
+
+      - name: 发布 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
