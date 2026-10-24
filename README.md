@@ -62,6 +62,16 @@ python export_snapshot.py        # 重新抓取并生成 docs/data/contests.json
 
 本仓库已开启，Demo 地址：<https://yueliangeruanshi.github.io/contest-hub/>
 
+附带两个 GitHub Actions：
+
+| Workflow | 触发 | 作用 |
+| --- | --- | --- |
+| `update-snapshot.yml` | 每 6 小时 / 手动 / `fetchers.py`、`export_snapshot.py` 变更 | 重新抓取并刷新 `docs/data/contests.json`，Demo 数据自动保鲜 |
+| `release.yml` | push `v*` tag / 手动 | 自动打包 zip + tar.gz 并发布 Release |
+
+洛谷对境外 IP 返回 403，所以 CI 里通过 `CONTEST_SKIP=luogu` 跳过它，并沿用上一份快照中的洛谷数据，
+避免自动刷新把洛谷比赛覆盖成 0 场。
+
 ## 文件结构
 
 ```
