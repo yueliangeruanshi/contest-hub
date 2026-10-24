@@ -28,6 +28,9 @@ jobs:
           python-version: '3.11'
 
       - name: 抓取并生成快照
+        # 洛谷对境外 IP 返回 403，跳过它并沿用上一份快照中的洛谷数据
+        env:
+          CONTEST_SKIP: luogu
         run: |
           pip install -q requests beautifulsoup4
           python export_snapshot.py
