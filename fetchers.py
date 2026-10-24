@@ -444,10 +444,14 @@ FETCHERS = {
 }
 
 
-def build_payload() -> dict:
+def build_payload(skip: set[str] | None = None) -> dict:
+    """skip 里的平台不抓取（境外 CI 访问洛谷会被 403，用于跳过它）。"""
+    skip = set(skip or ())
     contests: list[dict] = []
     sources = {}
     for key, fn in FETCHERS.items():
+        if key in skip:
+            continue
         try:
             items, err = fn()
             sources[key] = {"ok": True, "count": len(items), "error": err}
